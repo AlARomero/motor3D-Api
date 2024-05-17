@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Blueprint 3D - Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="css/example.css" rel="stylesheet">
+
+  <!-- Make sure you've built blueprint3d.js -->
+  <!-- See README.md for details -->
+</head>
+
+<body>
+
+  <div class="container-fluid">
+    <div class="row d-flex vh-100 main-row">
+      <!-- Left Column -->
+      <div class=" col-3 d-flex flex-column alingn-items-start vh-100 sidebar" id="left-column" role="tablist"
+        aria-orientation="vertical" style="overflow: auto; padding-bottom: 7rem;">
+        <!-- Main Navigation -->
+        <div class="btn-group-vertical" role="group" aria-label="Vertical-main-functions-group"
+          style="margin-bottom: 0.5rem;">
+          <input type="radio" class="btn-check" name="floorplan_tab" id="floorplan_tab" autocomplete="off" disabled>
+          <label class="btn btn-outline-primary disabled" for="floorplan_tab" aria-disabled="true">
+            Editar Plano
+            <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-chevron-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
+            </svg>
+          </label>
+          <input type="radio" class="btn-check" name="design_tab" id="design_tab" autocomplete="off">
+          <label class="btn btn-outline-primary" for="design_tab">
+            Diseño
+            <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-chevron-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
+            </svg>
+          </label>
+          <input type="radio" class="btn-check" name="items_tab" id="items_tab" autocomplete="off">
+          <label class="btn btn-outline-primary" for="items_tab">
+            Añadir Objetos
+            <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-chevron-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
+            </svg>
+          </label>
+        </div>
+
+        <!-- Main Menu -->
+        <div class="row mx-auto" id="main-menu">
+
+          <!-- Modos de vista de listas de comensales -->
+          <div class="main-set mx-auto card" style="padding: 0;">
+            <div class="d-flex card-header">
+              <h5 class="mx-auto">Modo de vista</h5>
+            </div>
+            <div class="btn-group card-body" role="group" aria-label="main-menu-mode">
+
+              <!-- Modo limpio -->
+              <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-clean">
+              <label class="btn btn-outline-secondary" for="main-menu-mode-clean">Limpio</label>
+
+              <!-- Modo  una sola lista-->
+              <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-list-view">
+              <label class="btn btn-outline-secondary" for="main-menu-mode-list-view">Individual</label>
+
+              <!-- Modo edicion de listas -->
+              <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-list-edit">
+              <label class="btn btn-outline-secondary" for="main-menu-mode-list-edit">Edición</label>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <div class="d-flex gap-2">
+                <button class="btn btn-small btn-secondary" id="extract-all-list">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-expand" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708"/>
+                  </svg>
+                </button>
+                <button class="btn btn-small btn-secondary" id="contract-all-list">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-contract" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M3.646 13.854a.5.5 0 0 0 .708 0L8 10.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708m0-11.708a.5.5 0 0 1 .708 0L8 5.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-small btn-secondary" id="increase-list-font-size">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+                    <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+                    <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5"/>
+                  </svg>
+                </button>
+                <button class="btn btn-small btn-secondary" id="decrease-list-font-size">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+                    <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+                    <path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+                  </svg>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Puntos de vista de camara -->
+          <div class="main-set card m-t-0-5" style="padding: 0;">
+            <div class="d-flex card-header">
+              <h5 class="mx-auto"> Puntos de vista de cámara </h5>
+            </div>
+            <div class="card-body d-flex gap-2">
+              <div class="btn-group">
+                <button class="btn btn-outline-secondary" id="camera-view-1">1</button>
+                <button class="btn btn-outline-secondary" id="camera-view-2">2</button>
+                <button class="btn btn-outline-secondary" id="camera-view-3">3</button>
+                <button class="btn btn-outline-secondary" id="camera-view-4">4</button>
+                <button class="btn btn-outline-secondary" id="camera-view-5">5</button>
+              </div>
+              <button class="btn btn-primary" id="camera-view-save-btn">Guardar Posición</button>
+            </div>
+          </div>
+
+          <!-- Lista de Categorias -->
+          <div class="card m-t-0-5" style="padding: 0;">
+            <div class="card-header">Categorias</div>
+            <div class="card-body">
+              <div id="category-list-side-menu-container">
+                <!-- Aquí van las categorías inyectadas por js -->
+              </div>
+            </div>
+            <div class="card-footer">
+              <!-- Control para abrir el offcanvas de listado completo de comensales y boton para abrir el modal de creacion de categoria -->
+              <div class="d-flex gap-2">
+                <button class="btn btn-secondary" id="offcanvas-conmensal-button"  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-comensal-container" aria-controls="offcanvas-comensal-container">Lista de comensales</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-category-modal" id="add-new-category"> Nueva Categoria </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- OffCanvas de listado de comensales -->
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-comensal-container" aria-labelledby="offcanvas-comensal-title">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvas-comensal-title">Comensales</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+
+              <!-- Los siguientes dos botones van en fila -->
+              <div class="d-flex gap-2">
+                <!-- Categoria seleccionada con un dropdown -->
+                <select class="form-select" aria-label="Category OffCanvas Selector" id="category-offcanvas-selector">
+                  <!-- Aquí van todas las categorías de los comensales inyectadas por js y la genérica ya añadida-->
+                  <option value="todos los comensales">Todos los comensales</option>
+                </select>
+                <!-- Botón para descargar un pdf con el contenido de la lista actual de comensales -->
+                <button class="btn btn-primary" id="download-comensal-pdf">Descargar PDF</button>
+              </div>
+              
+              <ul class="list-group list-group-flush" id="offcanvas-comensal-list">
+                <!-- Aquí van los comensales inyectados por js -->
+              </ul>
+
+            </div>
+          </div>
+
+          <!-- Modal creacion de categorias -->
+          <div class="modal fade" id="new-category-modal" tabindex="-1" aria-labelledby="new-category-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title fs-5" id="new-category-modal-label">
+                    Nueva Categoria
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-new-category-modal" id="close-new-category-modal"></button>
+                </div>
+                <div class="modal-body">
+
+                  <!-- Formulario de una linea, onsubmit es false para que no se reinicie el programa, la logica se hace a traves de eventos -->
+                  <div class="row">
+                    <div class="col">
+                      <input type="text" class="form-control" placeholder="Nombre" id="new-category-name"></input>
+                    </div>
+                  
+                    <div class="col">
+                      <input type="color" class="form-control form-control-color" id="new-category-color" value="#563d7c" title="Selecciona Color">
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" id="save-new-category">Guardar</button>
+                </div>
+              </div>
+            </div>  
+          </div>
+
+          <!-- Modal de edicion de categorias -->
+          <div class="modal fade" id="edit-category-modal" tabindex="-1" aria-labelledby="edit-category-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title fs-5" id="edit-category-modal-label">
+                    Editar Categoria
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-edit-category-modal" id="close-edit-category-modal"></button>
+                </div>
+                <div class="modal-body">
+
+                  <!-- Formulario de una linea, onsubmit es false para que no se reinicie el programa, la logica se hace a traves de eventos -->
+                  <div class="row">
+                    <div class="col">
+                      <input type="text" class="form-control" placeholder="Nombre" id="edit-category-name" disabled></input>
+                    </div>
+                  
+                    <div class="col">
+                      <input type="color" class="form-control form-control-color" id="edit-category-color" value="#563d7c" title="Selecciona Color">
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" id="save-edit-category">Guardar</button>
+                </div>
+              </div>
+            </div>  
+          </div>
+
+        </div>
+        <!-- Context Menu -->
+        <div class="row mx-auto" id="context-menu">
+          <div class="mx-auto">
+
+            <!-- Titulo y Descripcion -->
+            <div class="card">
+              <span class="card-header" id="context-menu-name"></span>
+              <div class="card-body d-flex flex-column align-items-start">
+                <p class="mb-3 text-break" id="item-description"></p>
+                <div class="mt-auto align-self-end">
+                  <button class="btn btn-secondary float-right" type="button" data-bs-toggle="modal"
+                    data-bs-target="#modal-item-options">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-pencil-square" viewBox="0 0 16 16">
+                      <path
+                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                      <path fill-rule="evenodd"
+                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- MODAL DE ITEM -->
+            <div class="modal fade" id="modal-item-options" tabindex="-1" aria-labelledby="modal-item-options-label"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title fs-5" id="modal-item-options">Opciones del Objeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"
+                      id="close-description-modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form onsubmit="false">
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" placeholder="name" id="item-name-input"></input>
+                        <label for="item-name">Nombre</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="description" id="description-textarea"></textarea>
+                        <label for="description-textarea">Descripción</label>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-item-options">Guardar Cambios</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN DEL MODAL -->
+            <br>
+
+            <!-- Botones -->
+            <div class="mb-4">
+              <!-- Boton toggle del colapsado de tamaño de objeto-->
+              <button class="btn btn-primary w-45" type="button" data-bs-toggle="collapse"
+                data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Tamaño</button>
+              <!-- Input lock in place -->
+              <input class="btn-check w-45" type="checkbox" autocomplete="off" id="fixed">
+              <label class="btn btn-outline-secondary w-45" for="fixed">Bloquear</label>
+              <!-- Boton toggle de control de movimiento de objeto colapsado -->
+              <button class="btn btn-primary w-45 m-t-0-5" type="button" id="elevation-controls-btn"
+                data-bs-toggle="collapse" data-bs-target="#elevation-controls" aria-expanded="false"
+                aria-controls="elevation-controls">Elevación</button>
+              <!-- Boton de supresion de objeto -->
+              <button class="btn btn-block btn-danger w-45 m-t-0-5" id="context-menu-delete">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-trash-fill" viewBox="0 0 16 16">
+                  <path
+                    d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                </svg>
+                Eliminar
+              </button>
+            </div>
+
+            <!-- Div de tamaño de objeto colapsado -->
+            <div class="collapse" id="size-collapse" style="margin-top: 0.5rem;">
+              <div class="card">
+                <div class="card-header"> Tamaño </div>
+                <div class="card-body" style="color: #333333">
+                  <div class="form form-horizontal" class="lead">
+                    <div class="form-group">
+                      <label class="col-5 control-label">
+                        Ancho
+                      </label>
+                      <div class="col-6">
+                        <input type="number" class="form-control" id="item-width">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-5 control-label">
+                        Profundidad
+                      </label>
+                      <div class="col-6">
+                        <input type="number" class="form-control" id="item-depth">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-5 control-label">
+                        Altura
+                      </label>
+                      <div class="col-6">
+                        <input type="number" class="form-control" id="item-height">
+                      </div>
+                    </div>
+                  </div>
+                  <small><span class="text-muted">Unidad de medida en pulgadas</span></small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Div de control de movimiento de objeto colapsado -->
+            <div class="collapse" id="elevation-controls" style="margin-top: 0.5rem;">
+              <div class="card">
+                <div class="card-header"> Elevación </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <input type="number" step="5" class="form-control w-50"
+                      id="actual-elevation-value">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" id="comensales-container">
+              <p class="card-header">
+                Comensales
+              </p>
+              <div class="card-body" id="comensales-content">
+
+              </div>
+              <div class="card-footer d-flex justify-content-center" id="comensales-side-footer">
+                  <button  type="button" class="btn btn-primary" id='add-first-comensal'>
+                    Añadir
+                  </button>
+
+                  <div class="d-flex" id="comensales-side-up-and-down-buttons">
+                    <button class="btn btn-secondary" id="up-comensal-side-button">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5"/>
+                      </svg>
+                    </button>
+                    <button class="btn btn-secondary" id="down-comensal-side-button">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4"/>
+                      </svg>
+                    </button>
+                  </div>
+              </div>
+            </div>
+
+            <!-- Modal de comensales -->
+            <div class="modal fade" id="comensales-modal" tabindex="-1" aria-labelledby="comensales-modal-label" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <!-- Div para saber que comensal esta siendo modificado -->
+                    <div id="id-del-comensal-seleccionado" style="display: none;"></div>
+                    <h5 class="modal-title fs-5" id="comensales-modal-label">
+                      Comensal
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-comensal-modal" id="close-comensal-modal"></button>
+                  </div>
+                  <div class="modal-body">
+
+                    <!-- Formulario -->
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" placeholder="name" id="nombre-comensal"></input>
+                      <label for="nombre-comensal">Nombre</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <textarea class="form-control" placeholder="description" id="descripcion-comensal"></textarea>
+                      <label for="description-comensal">Descripcion</label>
+                    </div>
+                    <div class="input-group">
+                      <select class="form-select" aria-label="Comensal Category Selector" id="comensal-category-selector">
+                        <!-- Aquí van todas las categorias inyectadas por JS -->
+                        <option value="NA">Selecciona Categoria</option>
+                      </select>
+                      <button class="btn btn-primary" id="btn-add-category-from-comensal">Añadir</button>
+                      <button class="btn btn-danger" id="btn-remove-category-from-comensal">Eliminar</button>
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-comensal">Guardar Cambios</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Toasts de adicion y borrado de categorias -->
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+              <!-- Adicion -->
+              <div id="addition-category-toast" class="toast" role="alert" aria-live="polite" aria-atomic="true" data-bs-delay="3000">
+                <div class="toast-header">
+                  <div class="rounded" style="width: 15px; height: 15px; background-color: darkseagreen;"></div>
+                  <strong class="me-auto">¡Perfecto!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  La categoría se agregará al guardar los cambios.
+                </div>
+              </div>
+              <!-- Borrado -->
+              <div id="deletion-category-toast" class="toast" role="alert" aria-live="polite" aria-atomic="true" data-bs-delay="3000">
+                <div class="toast-header">
+                  <div class="rounded" style="width: 15px; height: 15px; background-color: lightcoral;"></div>
+                  <strong class="me-auto">¡Perfecto!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  La categoría se borrará al guardar los cambios.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Floor textures -->
+        <div id="floorTexturesDiv" style="display:none; padding: 0 20px">
+
+          <div class="d-flex gap-2">
+
+            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+              data-bs-target="#floor-textures-collapse" aria-expanded="false"
+              aria-controls="floor-textures-collapse" disabled>Texturas</button>
+
+              <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+              data-bs-target="#structure-floor-height" aria-expanded="false"
+              aria-controls="structure-floor-height">Altura</button>
+
+          </div>
+
+          <div class="m-t-0-5">
+            <label for="transparent-floor" class="form-label">Transparencia</label>   
+            <input class="form-range" type="range" min="0" max="1" step="0.05" id="transparent-floor"></input>         
+          </div>
+
+          <div class="collapse" id="floor-textures-collapse" style="margin-top: 0.5rem;">
+            <ul class="list-group" style="color: #333333">
+              <li class="list-group-item">
+                <a href="#" class="thumbnail texture-select-thumbnail"
+                  texture-url="rooms/textures/_SUELO_04_MARMOL_BEIGE.jpg" texture-stretch="false" texture-scale="300"
+                  texture-norm="" texture-occ="" texture-rough="" texture-disp="">
+                  <img class="img-fluid" alt="Thumbnail light fine wood"
+                    src="rooms/textures/_SUELO_04_MARMOL_BEIGE.jpg" />
+                </a>
+              </li>
+              <li class="list-group-item">
+                <a href="#" class="thumbnail texture-select-thumbnail"
+                  texture-url="rooms/textures/_SUELO_01_TARIMA_GRIS.jpg" texture-stretch="false" texture-scale="300"
+                  texture-norm="" texture-occ="" texture-rough="" texture-disp="">
+                  <img class="img-fluid" alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_01_TARIMA_GRIS.jpg">
+                </a>
+              </li>
+
+              <li class="list-group-item">
+                <a href="#" class="thumbnail texture-select-thumbnail"
+                  texture-url="rooms/textures/_SUELO_02_TARIMA_MADERA.jpg" texture-stretch="false" texture-scale="300"
+                  texture-norm="" texture-occ="" texture-rough="" texture-disp="">
+                  <img class="img-fluid" alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_02_TARIMA_MADERA.jpg">
+                </a>
+              </li>
+              <li class="list-group-item">
+                <a href="#" class="thumbnail texture-select-thumbnail"
+                  texture-url="rooms/textures/_SUELO_03_MARMOL_GRIS.jpg" texture-stretch="false" texture-scale="300"
+                  texture-norm="" texture-occ="" texture-rough="" texture-disp="">
+                  <img class="img-fluid" alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_03_MARMOL_GRIS.jpg">
+                </a>
+              </li>
+
+            </ul>
+          </div>
+          <div class="collapse" id="structure-floor-height" style="margin-top: 0.5rem;">
+            <div class="card">
+              <div class="card-header">Altura de suelo</div>
+              <div class="card-body">
+                <div class="d-flex justify-content-center">
+                  <input type="number" step="1" class="form-control w-50" id="actual-floor-height" disabled>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wall Textures -->
+        <div id="wallTextures" style="display:none; padding: 0 20px">
+          <div class="d-flex justify-content-center align-items-center">
+            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+              data-bs-target="#wall-textures-collapse" aria-expanded="false" aria-controls="wall-textures-collapse"
+              style="margin-right: 0.5rem;">Texturas</button>
+            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+              data-bs-target="#structure-wall-height" aria-expanded="false"
+              aria-controls="structure-wall-height">Altura</button>
+          </div>
+          <div class="collapse" id="wall-textures-collapse" style="margin-top: 0.5rem;">
+            <ul class="list-group" style="color: #333333">
+              <li class="list-group-item">
+                <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/marbletiles.jpg"
+                  texture-stretch="false" texture-scale="300">
+                  <img class="img-fluid" alt="Thumbnail marbletiles" src="rooms/thumbnails/thumbnail_marbletiles.jpg" />
+                </a>
+              </li>
+              <li class="list-group-item">
+                <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/wallmap_yellow.png"
+                  texture-stretch="true" texture-scale="">
+                  <img class="img-fluid" alt="Thumbnail wallmap yellow"
+                    src="rooms/thumbnails/thumbnail_wallmap_yellow.png" />
+                </a>
+              </li>
+              <li class="list-group-item">
+                <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/light_brick.jpg"
+                  texture-stretch="false" texture-scale="100">
+                  <img class="img-fluid" alt="Thumbnail light brick" src="rooms/thumbnails/thumbnail_light_brick.jpg" />
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="collapse" id="structure-wall-height" style="margin-top: 0.5rem;">
+            <div class="card">
+              <div class="card-header"> Altura </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-center">
+                  <input type="number" min="1" step="1" class="form-control w-50" id="actual-wall-height">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-9 main">
+
+        <!-- 3D Viewer -->
+        <div id="3d-container">
+          <div id="viewer">
+            
+          </div>
+          <div id="main-controls" class="d-flex gap-2 me-2">
+            <a href="#" class="btn btn-secondary btn-sm 3d-viewer-control" id="new" role="button">
+              Nuevo Diseño
+            </a>
+            <a href="#" class="btn btn-secondary btn-sm 3d-viewer-control" id="saveFile" role="button">
+              Guardar Diseño
+            </a>
+            <a class="btn btn-sm btn-secondary btn-file 3d-viewer-control" role="button">
+              <input type="file" class="hidden-input" id="loadFile">
+              Cargar Diseño
+            </a>
+            <a class="btn btn-sm btn-secondary btn-file 3d-viewer-control disabled" role="button" aria-disabled="true">
+              <input type="file" class="hidden-input" id="load-new-model" disabled>
+              Cargar Modelo 3D
+            </a>
+          </div>
+
+          <div id="camera-controls">
+            <a href="#" class="btn btn-secondary bottom 3d-viewer-control" role="button" id="zoom-out">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0" />
+                <path
+                  d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z" />
+                <path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5" />
+              </svg>
+            </a>
+            <a href="#" class="btn btn-secondary bottom 3d-viewer-control" role="button" id="reset-view">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-houses"
+                viewBox="0 0 16 16">
+                <path
+                  d="M5.793 1a1 1 0 0 1 1.414 0l.647.646a.5.5 0 1 1-.708.708L6.5 1.707 2 6.207V12.5a.5.5 0 0 0 .5.5.5.5 0 0 1 0 1A1.5 1.5 0 0 1 1 12.5V7.207l-.146.147a.5.5 0 0 1-.708-.708zm3 1a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708zm.707.707L5 7.207V13.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.207z" />
+              </svg>
+            </a>
+            <a href="#" class="btn btn-secondary bottom 3d-viewer-control" role="button" id="zoom-in">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0" />
+                <path
+                  d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z" />
+                <path fill-rule="evenodd"
+                  d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5" />
+              </svg>
+            </a>
+
+            <span>&nbsp;</span>
+
+            <a class="btn btn-secondary bottom 3d-viewer-control" href="#" id="move-left" role="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+              </svg>
+            </a>
+            <span class="btn-group-vertical">
+              <a class="btn btn-secondary 3d-viewer-control" href="#" id="move-up" role="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-arrow-up" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd"
+                    d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5" />
+                </svg>
+              </a>
+              <a class="btn btn-secondary 3d-viewer-control" href="#" id="move-down" role="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-arrow-down" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd"
+                    d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1" />
+                </svg>
+              </a>
+            </span>
+            <a class="btn btn-secondary bottom 3d-viewer-control" href="#" id="move-right" role="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2D Floorplanner -->
+        <div id="floorplanner">
+          <canvas id="floorplanner-canvas"></canvas>
+          <div id="floorplanner-controls">
+
+            <button id="move" class="btn btn-sm btn-default">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrows-move" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10M.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8" />
+              </svg>
+              Mover muros
+            </button>
+            <button id="draw" class="btn btn-sm btn-default">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                <path
+                  d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
+              </svg>
+              Dibujar muros
+            </button>
+            <button id="delete" class="btn btn-sm btn-default">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-trash-fill" viewBox="0 0 16 16">
+                <path
+                  d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+              </svg>
+              Borrar muros
+            </button>
+            <button class="btn btn-primary btn-sm" id="update-floorplan">Listo &raquo;</button>
+
+
+          </div>
+          <div id="draw-walls-hint">
+            Presiona la tecla "Esc" para parar de dibujar muros
+          </div>
+        </div>
+
+        <!-- Add Items -->
+        <div id="add-items">
+          <div class="row" id="items-wrapper">
+
+            <!-- Items added here by items.js -->
+          </div>
+        </div>
+
+      </div>
+      <!-- End Right Column -->
+    </div>
+
+  </div>
+
+  <!-- Login prompt -->
+  <div class="container-fluid col-3" style="position: fixed; bottom: 0; left: 0; padding: 0;">
+    <div class="d-flex justify-content-between" style="background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+      </svg>
+      <a href="/login" class="btn btn-outline-success">Iniciar sesión</a>
+    </div>
+  </div>
+
+  <div id="script-loading-screen">
+    <label for="progress-bar">Cargando...</label>
+    <progress id="progress-bar" value="0" max="100"></progress>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="../js/modernizr.js"></script>
+  <script src="../js/items.js"></script>
+  <script src="../js/bundle.js"></script>
+</body>
+
+</html>

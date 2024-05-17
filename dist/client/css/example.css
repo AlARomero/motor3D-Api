@@ -1,0 +1,247 @@
+/*
+ * General Formatting
+ */
+
+ html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+div {
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Sidebar
+ */
+
+.main-row {
+  padding: 0;
+}
+
+.sidebar {
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto; 
+  border-right: 1px solid #eee;
+}
+
+.main-nav {
+  margin-right: 21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+.main-nav > li > button {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.main-nav > .active > button,
+.main-nav > .active > button:hover,
+.main-nav > .active > button:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 0;
+}
+
+.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+/*
+ * "Loading" modal
+ */
+
+#loading-modal {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-color: rgba(50, 50, 50, 0.9);
+}
+
+#loading-modal  h1 {
+  text-align: center; 
+  margin-top: 30%;
+  color: #fff;
+}
+
+/*
+ * Design
+ */
+
+#viewer {
+  display: none;
+}
+
+#floorplanner {
+  display: none;
+}
+
+#add-items {
+  display: none;
+  padding: 20px;
+  overflow-y: auto; 
+}
+
+#main-controls {
+  position: absolute;
+  top: 20px;
+  margin-left: 1rem;
+}
+
+#camera-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+  padding: 0 20px;  
+  text-align: right;
+}
+
+#floorplanner-controls {
+  position: absolute;
+  top: 20px;
+  margin-left: 1rem;
+}
+
+#draw-walls-hint {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.50);
+  color: #ffffff;
+  padding: 5px 10px;
+  z-index: 10;
+  display: none;
+}
+
+#btn-done { /* Mueve el boton done hasta el final de la ventana */
+  margin-left: 40rem;
+}
+
+#move-up { /*Espaciado entre boton de arriba y abajo*/
+  margin-bottom: 0.05rem;
+}
+
+#move-down { /*Espaciado entre boton de arriba y abajo*/
+  margin-top: 0.15rem;
+}
+
+.add-item {
+  cursor: pointer;
+}
+
+.btn-file {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  cursor: inherit;
+  display: block;
+}
+
+.w-45 {
+  width: 45%;
+}
+
+.m-t-0-5 {
+  margin-top: 0.5rem;
+}
+
+.comensal-selected {
+  background-color: #b3b2b2; /* Cambia el color de fondo del objeto a un gris claro */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Añade una transición suave al cambiar el color de fondo y el sombreado */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añade un sombreado al objeto */
+  padding: 0.1rem; /* Añade un espacio alrededor del contenido del objeto */
+  border-radius: 0.5rem; /* Redondea las esquinas del objeto */
+}
+
+#script-loading-screen {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: #808080; /* Cambia el color de fondo a gris opaco */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#progress-bar {
+  width: 30%;
+  margin-top: 0.5%;
+  height: 2%;
+  background: #ddd; /* Cambia el color de fondo de la barra a gris claro */
+  border: none; /* Elimina el borde predeterminado */
+  border-radius: 3px; /* Añade bordes redondeados */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2); /* Añade un poco de sombra interna para darle profundidad */
+}
+
+#progress-bar::-webkit-progress-bar {
+  background: #ddd; /* Cambia el color de fondo de la barra a gris claro para Webkit */
+  border-radius: 3px
+}
+
+#progress-bar::-webkit-progress-value {
+  background: #4a90e2; /* Cambia el color de la barra de progreso a azul para Webkit */
+  border-radius: 3px;
+}
+
+#progress-bar::-moz-progress-bar {
+  background: #4a90e2; /* Cambia el color de la barra de progreso a azul para Firefox */
+  border-radius: 3px;
+}
+
+#script-loading-screen label{
+  color: white;
+  font-size: 2rem;
+}
+
+#comensales-side-footer {
+  display: grid; 
+  grid-template-columns: 50% 25% 25%; 
+  gap: 2rem;
+}
+
+#add-first-comensal {
+  grid-column: 1 / 2;
+}
+
+#comensales-side-up-and-down-buttons {
+  grid-column: 2 / 4; 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 2px;
+}
