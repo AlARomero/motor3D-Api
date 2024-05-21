@@ -94022,12 +94022,13 @@ var scene_Scene = function (model, textureDir) {
       this.addItem(item.item_type, item.model_url, metadata, item.textureFill, position, item.rotation, scale, item.fixed, item.itemsBounded);
     }
   };
-  function loaderCallback(geometry, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  function loaderCallback(geometry, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem = true) {
     const t0 = performance.now();
     if (ext == "gltf" || ext == "glb") {
       itemType += 10;
     }
     const item = new item_types[itemType](model, metadata, geometry, materials, position, rotation, scale);
+    if (!newItem) item.fromModel = true;
     item.fixed = fixed || false;
     item.textureFill = textureFill;
     //      alert(items.length)
@@ -94223,7 +94224,7 @@ var scene_Scene = function (model, textureDir) {
     var t1 = performance.now();
     console.log("[FIN]LoadingCallback " + item.metadata.itemName + ": " + (t1 - t0) + " milliseconds.");
   }
-  this.addItem = function (itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  this.addItem = function (itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem = true) {
     itemType = itemType || 1;
 
     //console.log("ItemType " + itemType);
@@ -94233,17 +94234,18 @@ var scene_Scene = function (model, textureDir) {
     // Obtenemos la extensión
     var ext = fileName.split('.').pop().split('?')[0];
     var fName = fileName.split('.').shift();
-    cargarItem("add", ext, fName, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded);
+    cargarItem("add", ext, fName, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem);
 
     //}
   };
-  function loaderCallbackDuplicate(geometry, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded) {
+  function loaderCallbackDuplicate(geometry, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded, newItem) {
     if (ext == "gltf" || ext == "glb") {
       itemType += 10;
     }
     const item = new item_types[itemType](model, metadata, geometry, materials,
     //new THREE.MeshFaceMaterial(materials),
     position, rotation, scale);
+    if (!newItem) item.fromModel = true;
     item.fixed = fixed || false;
     items.push(item);
     scope.add(item);
@@ -94366,7 +94368,7 @@ var scene_Scene = function (model, textureDir) {
     }
     scope.itemLoadedCallbacks.fire(item);
   }
-  function cargarItem(type, ext, fName, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  function cargarItem(type, ext, fName, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem) {
     // LOADING GLTF
     if (ext === 'gltf' || ext === 'glb') {
       //const loader = new GLTFLoader().setPath( 'models/gltf/DamagedHelmet/glTF-instancing/' );
@@ -94440,9 +94442,9 @@ var scene_Scene = function (model, textureDir) {
 
         //loaderCallback(object.scene.children[0].children[0].geometry, materials);
         if (type === "add") {
-          loaderCallback(group, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded);
+          loaderCallback(group, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem);
         } else {
-          loaderCallbackDuplicate(group, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded);
+          loaderCallbackDuplicate(group, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded, newItem);
         }
         //loaderCallback(object.scene.children[0], materials);
         //loaderCallback(object.scene.children[0].geometry, object.scene.children[0].material);
@@ -94493,14 +94495,14 @@ var scene_Scene = function (model, textureDir) {
       });
     }
   }
-  this.duplicateItem = function (itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  this.duplicateItem = function (itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem = true) {
     itemType = itemType || 1;
     scope.itemLoadingCallbacks.fire();
 
     // Obtenemos la extensión
     var ext = fileName.split('.').pop().split('?')[0];
     var fName = fileName.split('.').shift();
-    cargarItem("duplicate", ext, fName, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded);
+    cargarItem("duplicate", ext, fName, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem);
   };
   function predefinedForms() {
     var callback = function () {
@@ -102125,7 +102127,7 @@ var Model = function (textureDir) {
       console.log(metadata);
       console.log(scale);
       console.log("URL item: " + item.model_url);
-      scope.scene.addItem(item.item_type, item.model_url, metadata, item.textureFill, position, item.rotation, scale, item.fixed, item.itemsBounded);
+      scope.scene.addItem(item.item_type, item.model_url, metadata, item.textureFill, position, item.rotation, scale, item.fixed, item.itemsBounded, false);
     });
     scope.scene.categories = categories;
   };
@@ -104985,8 +104987,13 @@ class ThreeSkybox {
     this.background = 0xD3D3D3;
     scene.getScene().background = new Color(this.background);
 
-    // Sky (modelo 3D de fondo)
-    this.loadNewModel('../models/gltf/Chalet_Bodas_02.gltf');
+    // Sky (modelo 3D de fondo) por default
+    this.model = {
+      "name": "Chalet",
+      "image": "../models/thumbnails/Chalet.png",
+      "model": "../models/gltf/Chalet_Bodas_02.gltf"
+    };
+    this.loadNewModel(this.model.model);
   }
 
   // Carga un nuevo modelo 3D de fondo y desecha el anterior
@@ -105008,6 +105015,11 @@ class ThreeSkybox {
     }).catch(err => {
       console.log(err);
     });
+  }
+  loadFromModels(model) {
+    if (this.model.name === model.name) return;
+    this.model = model;
+    this.loadNewModel(model.model);
   }
 
   // Añadir callbacks
@@ -108264,7 +108276,7 @@ var ThreeMain = function (model, element, canvasElement, opts) {
     const room = getRoomFromItem(item);
     if (room) {
       const roomAltitude = room.altitude;
-      item.setPosition(item.position.x, item.position.y + roomAltitude, item.position.z);
+      if (!item.fromModel) item.setPosition(item.position.x, item.position.y + roomAltitude, item.position.z);else item.fromModel = false;
     }
 
     // Si no hay habitacion, algo malo ha ocurrido
@@ -116447,7 +116459,8 @@ var SideMenu = function (blueprint3d, floorplanControls) {
   const tabs = {
     "FLOORPLAN": client_$("#floorplan_tab"),
     "SHOP": client_$("#items_tab"),
-    "DESIGN": client_$("#design_tab")
+    "DESIGN": client_$("#design_tab"),
+    "MODELS": client_$("#models_tab")
   };
   const scope = this;
   this.stateChangeCallbacks = client_$.Callbacks();
@@ -116463,6 +116476,10 @@ var SideMenu = function (blueprint3d, floorplanControls) {
     "SHOP": {
       "div": client_$("#add-items"),
       "tab": tabs.SHOP
+    },
+    "MODELS": {
+      "div": client_$("#add-models"),
+      "tab": tabs.MODELS
     }
   };
 
@@ -116478,6 +116495,7 @@ var SideMenu = function (blueprint3d, floorplanControls) {
     blueprint3d.three.updateWindowSize();
     handleWindowResize();
     initItems();
+    initModels();
     scope.stateChangeCallbacks.add(state => {
       if (state !== scope.states.DEFAULT) {
         client_$('.3d-viewer-control').hide();
@@ -116569,6 +116587,17 @@ var SideMenu = function (blueprint3d, floorplanControls) {
         isTable: isTable
       };
       blueprint3d.model.scene.addItem(itemType, modelUrl, metadata);
+      setCurrentState(scope.states.DEFAULT);
+    });
+  }
+  function initModels() {
+    client_$("#add-models").find(".add-model").on("mousedown", function (e) {
+      const model = {
+        "name": client_$(this).attr("model-name"),
+        "image": client_$(this).find(".img").attr("src"),
+        "model": client_$(this).attr("model-url")
+      };
+      blueprint3d.three.skyBox.loadFromModels(model);
       setCurrentState(scope.states.DEFAULT);
     });
   }
@@ -116899,7 +116928,7 @@ client_$(function () {
     floorplannerElement: 'floorplanner-canvas',
     threeElement: '#viewer',
     threeCanvasElement: 'three-canvas',
-    textureDir: "models/textures/",
+    textureDir: "../models/textures/",
     widget: false
   };
   const blueprint3d = new client_Blueprint3d(opts);
