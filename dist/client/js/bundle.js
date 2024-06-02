@@ -115590,6 +115590,11 @@ var CameraButtons = function (blueprint3d) {
     client_$("#zoom-in").on('dblclick', preventDefault);
     client_$("#zoom-out").on('dblclick', preventDefault);
     client_$("#reset-view").on('click', three.centerCamera);
+    client_$("#top-view").on('click', function () {
+      three.centerCamera();
+      orbitControls.rotateUp(90);
+      orbitControls.update();
+    });
     client_$("#move-left").on('click', function () {
       pan(directions.LEFT);
     });
