@@ -1,0 +1,49 @@
+El proyecto está dividido enstre los arvhivos ejecutables sin ser compilados (carpeta dist/client) y 
+los archivos que deben ser procesados para luego ser ejecutados (carpeta src/server). Adicionalmente, se encuentran
+archivos adicionales que son necesarios para el funcionamiento del proyecto.
+
+
+/*** Archivos Adicionales ***/
+
+- .env: archivo necesario para guardar las variables de entorno. Si no se encuentra en el proyecto debe crearse
+        en la carpeta raíz y añadir las variables de entorno necesarias.
+
+- .gitignore: Archivo usado para indicar qué elementos tiene que pasar por alto el gestor de archivos.
+
+- database.sql: Archivo que contiene el sql para borrar y crear la base de datos necesaria para el funcionamiento
+                correcto del proyecto.
+
+- package-lock.json y package.json: Archivos que contienen información de la aplicación como las librerías
+                                    usadas y su versión.
+
+- tsconfig.json: Configuración necesaria para compilar correctamente el Typescript que contiene el proyecto.
+
+/*** Carpeta dist/client ***/
+En esta carpeta hay una nueva division en carpetas según la finalidad de los contenidos.
+
+    - assets: Contiene imágenes de presentación de texturas. Actualmente no se usa.
+    - img: Contiene imágenes de presentación de texturas. Actualmente no se usa.
+    - css: Contiene todos los archivos css usados para representar los estilos de los archivos html.
+    - js: Contiene todos los archivos JavaScript estáticos necesarios para el funcionamiento de la aplicación.
+          Concretamente los archivos bundle.js, 661.js y 838.js conforman todo el código del proyecto Blueprint3D compilado. 
+    - models: Carpeta en la que se pueden encontrar todos los modelos 3D, divididos en glb y gltf y sus imágenes
+              de presentación, ubicadas en la carpeta thumbnails. También contiene una carpeta llamada textures con
+              diferentes texturas que actualmente no estan siendo usadas.
+    - rooms: Carpeta en la que se encuentran las texturas de los suelos y muros de habitaciones en la carpeta
+             textures además de sus imágenes de presentación en la carpeta thumbnails.
+    - templates: Contiene todos los archivos html usados en la aplicación web.
+
+/*** Carpeta src/server ***/ 
+En esta carpeta se encuentran todos los archivos que conforman el servidor. Estos están divididos en carpetas según
+su funcionalidad.
+
+El archivo app.ts es el archivo con el que se inicia el servidor y el archivo que inicializa toda la configuación
+inicial necesaria.
+
+La estructura de carpeta se divide en:
+    - classes: Carpeta que define la estructura de las clases con las que son usadas para trabajar la información en la API.
+    - controllers: Aquí se encuentran los controladores que se conectan a la base de datos para recuperar información o 
+                   añadir elementos nuevos.
+    - dto: En ella se encuentran los objetos de transferencia de datos, es decir, los objetos a los que se envían y se devuelven
+           a través de preticiones.
+    - routers: Clases que sirven para trabajar los eventos de peticiones que se realizan a la API en las rutas designadas en app.ts.
